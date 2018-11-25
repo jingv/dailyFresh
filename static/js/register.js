@@ -45,11 +45,17 @@ $(function(){
 			$('#user_name').next().html('请输入5-20个字符的用户名')
 			$('#user_name').next().show();
 			error_name = true;
-		}
-		else
-		{
-			$('#user_name').next().hide();
-			error_name = false;
+		}else{
+			$.get('/user/register_exist/?user_name='+$('#user_name').val(), function(data){
+				// alert(data.count);
+				if(data.count >= 1){
+					$('#user_name').next().html('用户名已存在').show();
+					error_nmae = true;
+				}else{
+					$('#user_name').next().hide();
+					error_name = false;
+				}
+			});			
 		}
 	}
 
@@ -60,9 +66,7 @@ $(function(){
 			$('#pwd').next().html('密码最少8位，最长20位')
 			$('#pwd').next().show();
 			error_password = true;
-		}
-		else
-		{
+		}else{
 			$('#pwd').next().hide();
 			error_password = false;
 		}		
@@ -78,9 +82,7 @@ $(function(){
 			$('#cpwd').next().html('两次输入的密码不一致')
 			$('#cpwd').next().show();
 			error_check_password = true;
-		}
-		else
-		{
+		}else{
 			$('#cpwd').next().hide();
 			error_check_password = false;
 		}		
@@ -94,9 +96,7 @@ $(function(){
 		{
 			$('#email').next().hide();
 			error_email = false;
-		}
-		else
-		{
+		}else{
 			$('#email').next().html('你输入的邮箱格式不正确')
 			$('#email').next().show();
 			error_check_password = true;
@@ -114,19 +114,9 @@ $(function(){
 		if(error_name == false && error_password == false && error_check_password == false && error_email == false && error_check == false)
 		{
 			return true;
-		}
-		else
-		{
+		}else{
 			return false;
 		}
 
 	});
-
-
-
-
-
-
-
-
 })
