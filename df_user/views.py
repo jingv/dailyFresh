@@ -68,7 +68,7 @@ def login_handle(request):
         s.update(user_pwd_input.encode(encoding='utf-8'))
         if s.hexdigest() == user_info[0].user_pwd:
             # 定义重定向
-            red = HttpResponseRedirect('/user/info')
+            red = HttpResponseRedirect('/user/user_info/')
             if remember_pwd_input:
                 red.set_cookie('user_name', user_name_input)
             else:
@@ -97,5 +97,41 @@ def login_handle(request):
     return render(request, 'df_user/login.html', context)
 
 
-def info(request):
-    return render(request, 'df_user/user_cednter_info.html')
+def user_info(request):
+    user_email = models.UserInfo.objects.get(id=request.session['user_id']).user_email
+    user_addr = models.UserInfo.objects.get(id=request.session['user_id']).accepter_address
+    context = {
+        'title': '天天生鲜-用户中心',
+        'user_name': request.session['user_name'],
+        'user_email': user_email,
+        'user_addr': user_addr,
+    }
+    return render(request, 'df_user/user_center_info.html', context)
+
+
+def user_order(request):
+    context = {
+        'title': '用户中心',
+    }
+    return render(request, 'df_user/user_center_order.html', context)
+
+
+def user_site(request):
+    user = models.UserInfo.objects.get(id=request.session['user_id'])
+    if request.method == 'POST':
+        post = request.POST
+        user.accepter_name = post.get('accepter_name')
+        user.accepter_address = post.get('accepter_address')
+        user.accepter_postcode = post.get('accepter_postcode')
+        user.accepter_phone_number = post.get('accepter_phone_number')
+        user.save()
+    context = {
+        'title': '用户中心',
+        'user': user,
+        'accepter_name': '(%s 收)' % user.accepter_name if user.accepter_name != '' else '',
+        'accepter_address': user.accepter_address,
+        'accepter_postcode': user.accepter_postcode,
+        'accepter_phone_number': user.accepter_phone_number,
+        'accepter_name_blow': user.accepter_name,
+    }
+    return render(request, 'df_user/user_center_site.html', context)
