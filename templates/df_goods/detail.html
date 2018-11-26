@@ -100,7 +100,7 @@
 {%block goods_foot%}
 	<div class="add_jump"></div>
 
-	<script type="text/javascript" src="js/jquery-1.12.2.js"></script>
+	<script type="text/javascript"></script>
 	<script type="text/javascript">
 		var $add_x = $('#add_cart').offset().top;
 		var $add_y = $('#add_cart').offset().left;
@@ -129,14 +129,18 @@
 		}
 		function minus(){
 			num = parseFloat($('.num_show').val());
+			if(num <= 1) return ;
 			$('.num_show').val(num-1);
 			$('.num_show').blur();			
 		}
 		$(function(){
 			$('.num_show').blur(function() {
-				num = parseFloat($('.num_show').val());
+				num = parseInt($('.num_show').val());
+				if(num <= 1) num = 1;
+				
 				price = parseFloat($('#goods_price').text());
 				total = num * price;
+				$('.num_show').val(num);
 				$('#price_total').text(total.toFixed(2) + '元');
 			});
 		})
