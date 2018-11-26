@@ -1,0 +1,144 @@
+{% extends 'goods_base.html' %}
+
+{%block index_head%}
+		<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+{%endblock index_head%}
+
+{%block goods_body%}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+					<li><a href="/goods/list{{type0}}_1_1" class="fruit">新鲜水果</a></li>
+					<li><a href="/goods/list{{type1}}_1_1" class="seafood">海鲜水产</a></li>
+					<li><a href="/goods/list{{type2}}_1_1" class="meet">猪牛羊肉</a></li>
+					<li><a href="/goods/list{{type3}}_1_1" class="egg">禽类蛋品</a></li>
+					<li><a href="/goods/list{{type4}}_1_1" class="vegetables">新鲜蔬菜</a></li>
+					<li><a href="/goods/list{{type5}}_1_1" class="ice">速冻食品</a></li>
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="/goods/">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="#">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="#">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">新鲜水果</a>
+		<span>></span>
+		<a href="#">商品详情</a>
+	</div>
+
+	<div class="goods_detail_con clearfix">
+		<div class="goods_detail_pic fl"><img src="/static/{{goods.goods_detail_pic}}"></div>
+
+		<div class="goods_detail_list fr">
+			<h3>{{goods.goods_title}}</h3>
+			<p>{{goods.goods_describe}}</p>
+			<div class="prize_bar">
+				<span class="show_pirze">¥<em id="goods_price">{{goods.goods_price}}</em></span>
+				<span class="show_unit">单  位：{{goods.goods_price_unit}}</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" class="num_show fl" value="1">
+					<a href="javascript:add();" class="add fr">+</a>
+					<a href="javascript:minus();" class="minus fr">-</a>	
+				</div> 
+			</div>
+			<div class="total">总价：<em id="price_total">{{goods.goods_price}}元</em></div>
+			<div class="operate_btn">
+				<a href="javascript:;" class="buy_btn">立即购买</a>
+				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>				
+			</div>
+		</div>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					{% for goods in news %}
+						<li>
+							<a href="/goods/{{goods.id}}/"><img src="/static/{{goods.goods_pic}}"></a>
+							<h4><a href="/goods/{{goods.id}}/">{{goods.goods_title}}</a></h4>
+							<div class="prize">￥{{goods.goods_price}}</div>
+						</li>
+					{% endfor%}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active">商品介绍</li>
+				<li>评论</li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>商品详情：</dt>
+					<dd>{{goods_describe}}</dd>
+				</dl>
+			</div>
+
+		</div>
+	</div>
+{%endblock goods_body%}
+	
+
+{%block goods_foot%}
+	<div class="add_jump"></div>
+
+	<script type="text/javascript" src="js/jquery-1.12.2.js"></script>
+	<script type="text/javascript">
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
+		$('#add_cart').click(function(){
+			$(".add_jump").stop().animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast',function(){
+						$('#show_count').html(2);
+					});
+
+			});
+		});
+	</script>
+	<script>
+		function add(){
+			num = parseFloat($('.num_show').val());
+			$('.num_show').val(num+1);
+			$('.num_show').blur();
+		}
+		function minus(){
+			num = parseFloat($('.num_show').val());
+			$('.num_show').val(num-1);
+			$('.num_show').blur();			
+		}
+		$(function(){
+			$('.num_show').blur(function() {
+				num = parseFloat($('.num_show').val());
+				price = parseFloat($('#goods_price').text());
+				total = num * price;
+				$('#price_total').text(total.toFixed(2) + '元');
+			});
+		})
+	</script>
+{%endblock goods_foot%}
