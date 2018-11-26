@@ -102,4 +102,27 @@ def detail(request, goods_id):
         'type4': typelist[4].id,
         'type5': typelist[5].id,
     }
-    return render(request, 'df_goods/detail.html', context)
+
+    response = render(request, 'df_goods/detail.html', context)
+    # 用户最近浏览， 用户中心使用
+    goods_viewed_ids = request.COOKIES.get('goods_viewed_ids', '')
+    goods_now_id = str(goods.id)
+    #  判断用户之前是否有浏览历史
+    if goods_viewed_ids != '':
+        # 转换为列表
+        goods_viewed_ids = goods_viewed_ids.split(',')
+        # 判断当前商品是否已经存在于列表， 若存在将其删除
+        if goods_now_id in goods_viewed_ids:
+            goods_viewed_ids.remove(goods_now_id)
+        # 将当前商品添加到第一个
+        goods_viewed_ids.insert(0, goods_now_id)
+        if len(goods_viewed_ids) >= 6:
+            goods_viewed_ids = goods_viewed_ids[0: 5]
+        # 转换回字符串
+        goods_viewed_ids = ','.join(goods_viewed_ids)
+    else:
+        goods_viewed_ids = goods_now_id
+
+    # 写入cookie
+    response.set_cookie('goods_viewed_ids', goods_viewed_ids)
+    return response

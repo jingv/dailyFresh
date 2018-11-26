@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^user_info/$', views.user_info),
     url(r'^user_order/$', views.user_order),
     url(r'^user_site/$', views.user_site),
+    url(r'^logout/$', views.logout),
 ]
