@@ -16,13 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
+from df_goods import views as df_goods_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^user/', include('df_user.urls')),
-    url(r'tinymce/', include('tinymce.urls')),
 
-    url(r'', include('df_goods.urls')),
-    url(r'^index/', include('df_goods.urls')),
+    # 用户中心页
+    url(r'^user/', include('df_user.urls')),
+    # tinymce配置
+    url(r'tinymce/', include('tinymce.urls')),
+    # 商品相关页以及主页
+    url(r'^$', df_goods_views.index),
     url(r'^goods/', include('df_goods.urls')),
 ]
