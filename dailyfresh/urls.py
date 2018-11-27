@@ -28,4 +28,6 @@ urlpatterns = [
     # 商品相关页以及主页
     url(r'^$', df_goods_views.index),
     url(r'^goods/', include('df_goods.urls')),
+    # 购物车页面
+    url(r'^cart/', include('df_cart.urls')),
 ]

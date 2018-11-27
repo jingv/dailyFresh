@@ -110,29 +110,44 @@
 
 		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
 		$('#add_cart').click(function(){
+			// 先判断是否已经登陆
+			if($('.login_btn').html().indexOf('登') <= 100){
+				alert('请登陆后购买');
+				location.href = '/user/login';
+				return 
+			}
+			
+			// 动画部分
 			$(".add_jump").stop().animate({
 				'left': $to_y+7,
 				'top': $to_x+7},
 				"fast", function() {
 					$(".add_jump").fadeOut('fast',function(){
-						$('#show_count').html(2);
+						// $('#show_count').html(2);
 					});
-
+			});
+			// 异步请求
+			num = parseInt($('.num_show').val());
+			$.get('/cart/add{{goods.id}}_' + num + '/', function(data){
+				$('#show_count').text(data.goods_count);
 			});
 		});
 	</script>
 	<script>
+		// 商品数量增加时，修改当前页面上的数值
 		function add(){
 			num = parseFloat($('.num_show').val());
 			$('.num_show').val(num+1);
 			$('.num_show').blur();
 		}
+		// 商品数量减少时，修改当前页面上的数值
 		function minus(){
 			num = parseFloat($('.num_show').val());
 			if(num <= 1) return ;
 			$('.num_show').val(num-1);
 			$('.num_show').blur();			
 		}
+		// 计算商品的总价
 		$(function(){
 			$('.num_show').blur(function() {
 				num = parseInt($('.num_show').val());

@@ -1,6 +1,6 @@
 from hashlib import sha1
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from . import models
 from . import user_decorator
 import df_goods.models as goods_model
@@ -60,7 +60,9 @@ def login(request):
 
 def logout(request):
     request.session.flush()
-    return redirect('/')
+    response = HttpResponseRedirect('/')
+    response.delete_cookie('url')
+    return response
 
 
 def login_handle(request):
