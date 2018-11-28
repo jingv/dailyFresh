@@ -62,7 +62,7 @@ def edit(request, cart_id, count):
 
 
 @user_decorator.login
-def delete(request, cart, cart_id):
+def delete(request, cart_id):
     try:
         cart = models.GoodsInfo.objects.get(pk=int(cart_id))
         cart.delete()
