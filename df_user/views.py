@@ -58,6 +58,7 @@ def login(request):
     return render(request, 'df_user/login.html', context)
 
 
+# 登出逻辑
 def logout(request):
     request.session.flush()
     response = HttpResponseRedirect('/')
@@ -107,6 +108,7 @@ def login_handle(request):
     return render(request, 'df_user/login.html', context)
 
 
+# 用户信息页
 @user_decorator.login
 def user_info(request):
     user_email = models.UserInfo.objects.get(id=request.session['user_id']).user_email
@@ -130,6 +132,7 @@ def user_info(request):
     return render(request, 'df_user/user_center_info.html', context)
 
 
+# 用户订单页
 @user_decorator.login
 def user_order(request):
     context = {
@@ -138,6 +141,7 @@ def user_order(request):
     return render(request, 'df_user/user_center_order.html', context)
 
 
+# 用户设置页
 @user_decorator.login
 def user_site(request):
     user = models.UserInfo.objects.get(id=request.session['user_id'])

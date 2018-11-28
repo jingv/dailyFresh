@@ -1,4 +1,4 @@
-import time
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.db import transaction
 from df_user.models import UserInfo
@@ -47,9 +47,11 @@ def order_handler(request):
         # 创建订单对象
         order = models.OrderInfo()
         user_id = request.session['user_id']
-        order.order_id = '%s%d' % (time.strftime("%c")[-5:], user_id)
+        now = datetime.now()
+        now_str = now.strftime('%x').replace('/', '') + now.strftime('%X')
+        order.order_id = '%s%d' % (now_str, user_id)
         order.user = UserInfo.objects.get(id=user_id)
-        order.order_date = time.strftime("%c")
+        order.order_date = now_str
         order.order_total_price = eval(request.GET.get('total_price'))
         order.save()
         # 创建详单对象
