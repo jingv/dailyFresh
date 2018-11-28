@@ -8,7 +8,7 @@ import df_goods.models as goods_model
 
 def register(request):
     context = {
-        'title': '天天生鲜-注册'
+        'title': '注册'
     }
     return render(request, 'df_user/register.html', context)
 
@@ -50,7 +50,7 @@ def register_handle(request):
 def login(request):
     user_name = request.COOKIES.get('user_name', '')
     context = {
-        "title": '天天生鲜-登陆',
+        "title": '登陆',
         'error_name': 0,
         'error_pwd': 0,
         'user_name': user_name,
@@ -89,7 +89,7 @@ def login_handle(request):
             return red
         else:
             context = {
-                'title': '天天生鲜-登陆',
+                'title': '登陆',
                 'error_name': 0,
                 'error_pwd': 1,
                 'user_name': user_name_input,
@@ -98,7 +98,7 @@ def login_handle(request):
             return render(request, 'df_user/login.html', context)
     else:
         context = {
-            'title': '天天生鲜-登陆',
+            'title': '登陆',
             'error_name': 1,
             'error_pwd': 0,
             'user_name': user_name_input,
@@ -121,7 +121,7 @@ def user_info(request):
             goods_viewed_list.append(goods_model.GoodsInfo.objects.get(id=int(goods_id)))
 
     context = {
-        'title': '天天生鲜-用户中心',
+        'title': '用户中心',
         'user_name': request.session['user_name'],
         'user_email': user_email,
         'user_addr': user_addr,

@@ -2,19 +2,19 @@
 
 {% block cart_head %}
     <script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
-	<script>
+    <script>
         // 删除
         function cart_del(cart_id){
-        	del = confirm('确定要删除吗？');
-        	if (del) {
-        		$.get('/cart/delete' + cart_id + '/', function(data){
-        			if(data.ok == 1){
-        				// 删除ul中id为要删除商品id的那一项
-        				$('ul').remove('#' + cart_id);
-        				total();
-        			}
-        		});
-        	}
+            del = confirm('确定要删除吗？');
+            if (del) {
+                $.get('/cart/delete' + cart_id + '/', function(data){
+                    if(data.ok == 1){
+                        // 删除ul中id为要删除商品id的那一项
+                        $('ul').remove('#' + cart_id);
+                        total();
+                    }
+                });
+            }
         }
         // 计算小计和总计
         function total(){
@@ -33,8 +33,8 @@
                 $(this).text(each_goods_price.toFixed(2));
                 // 计算总价时是否过滤掉未选中的元素
                 if($(this).prevAll('.col01').find('input').prop('checked')){
-					total_price += each_goods_price;
-					total_count ++;
+                    total_price += each_goods_price;
+                    total_count ++;
                 };                
             });
             // 显示总计
@@ -42,37 +42,40 @@
             $('.total_count1').text(total_count);
         }
 
-		$(function(){
-			// 计算商品的总价
-			total();
-			// 全选、全消
-			$('#check_all').click(function() {
+        $(function(){
+            // 计算商品的总价
+            total();
+            // 全选、全消
+            $('#check_all').click(function() {
                 state = $(this).prop('checked');
-				$(':checkbox:not(#check_all)').prop('checked', state);
-			});
-			// 选择
-			$(':checkbox:not(#check_all)').click(function() {
-				if($(this).prop('checked')){
-				    // 判断选中的checkbox是否为全部的checkbox，如果是全部的，则全选的checkbox也选中，否则补不选中
-					if($(':checked').length + 1 == $(':checkbox').length){
-						$('#check_all').prop('checked', true);
-					}
-				}else{
-					$('#check_all').prop('checked', false);
-				}
-				total();
-			});
+                $(':checkbox:not(#check_all)').prop('checked', state);
+                total();
+            });
+            // 选择
+            $(':checkbox:not(#check_all)').click(function() {
+                if($(this).prop('checked')){
+                    // 判断选中的checkbox是否为全部的checkbox，如果是全部的，则全选的checkbox也选中，否则补不选中
+                    if($(':checked').length + 1 == $(':checkbox').length){
+                        $('#check_all').prop('checked', true);
+                    }
+                }else{
+                    $('#check_all').prop('checked', false);
+                }
+                total();
+            });
 
-			// 数量加
+            // 数量加
             $('.add').click(function () {
                 txt = $(this).next();
                 txt.val(parseFloat(txt.val())+1).blur();
+                total();
             });
 
             // 数量减
             $('.minus').click(function () {
                 txt = $(this).prev();
                 txt.val(parseFloat(txt.val())-1).blur();
+                total();
             });
 
             // 手动修改数量
@@ -80,65 +83,84 @@
                 count = $(this).val();
                 if (count <= 0){
                     alert('请输入正确的数量');
-                	$(this).val(1);
+                    $(this).val(1);
                     $(this).focus();
                     return ;
                 }else if(count >= 100){
-                		alert('数量不能超过100');
-                		$(this).val(99);
-                		$(this).focus();
-                		return ;
-                } 
-            	cart_id = $(this).parents('.cart_list_td').attr('id');
-            	$.get('/cart/edit'+cart_id+'_'+count+'', function(data){
-            		if(data.ok ==0 ){ // 修改成功
-            			total();
-            		}else{ // 修改失败
-            			$(this).val(data.ok);
-            		}
-            	})
+                        alert('数量不能超过100');
+                        $(this).val(99);
+                        $(this).focus();
+                        return ;
+                }
+                total(); 
+                cart_id = $(this).parents('.cart_list_td').attr('id');
+                $.get('/cart/edit'+cart_id+'_'+count+'', function(data){
+                    if(data.ok ==0 ){ // 修改成功
+                        total();
+                    }else{ // 修改失败
+                        $(this).val(data.ok);
+                    }
+                })
             });
-		});
 
-	</script>
+
+            $('#settle_accounts').click(function() {
+                url = ''
+                $('.cart_list_td').each(function(){
+                    if($(this).children('.col01').children().is(':checked')){
+                        if(url == ''){
+                            url = '/order/?' + 'cart_id=' + $(this).attr('id');
+                        }else{
+                            url += ('&cart_id='+$(this).attr('id'))
+                        }                   
+                        // alert(url);
+                   }
+                });
+                $(this).children('a').attr('href', url);
+            });
+
+
+        });
+
+    </script>
 
 {%endblock cart_head%}
-	
+    
 {%block user_center_body%}
 
-	<div class="total_count">全部商品<em class="total_count1">{{cart_goods_count}}</em>件</div>	
-	<ul class="cart_list_th clearfix">
-		<li class="col01">商品名称</li>
-		<li class="col02">商品单位</li>
-		<li class="col03">商品价格</li>
-		<li class="col04">数量</li>
-		<li class="col05">小计</li>
-		<li class="col06">操作</li>
-	</ul>
+    <div class="total_count">全部商品<em>{{goods_count}}</em>件</div>    
+    <ul class="cart_list_th clearfix">
+        <li class="col01">商品名称</li>
+        <li class="col02">商品单位</li>
+        <li class="col03">商品价格</li>
+        <li class="col04">数量</li>
+        <li class="col05">小计</li>
+        <li class="col06">操作</li>
+    </ul>
 
-	{% for goods in cart_goods %}
-		<ul class="cart_list_td clearfix" id='{{goods.id}}'>
-			<li class="col01"><input type="checkbox" name="" checked></li>
-			<li class="col02"><img src="/static/{{goods.goods.goods_pic}}"></li>
-			<li class="col03">{{goods.goods.goods_title}}<br><em>{{goods.goods.goods_price}}元/{{goods.goods.goods_price_unit}}</em></li>
-			<li class="col04">{{goods.goods.goods_price_unit}}</li>
-			<li class="col05">{{goods.goods.goods_price}}元</li>
-			<li class="col06">
-				<div class="num_add">
-					<a href="javascript:;" class="add fl">+</a>
-					<input type="text" class="num_show fl" value="{{goods.count}}">	
-					<a href="javascript:;" class="minus fl">-</a>	
-				</div>
-			</li>
-			<li class="col07">{{goods.goods.goods_price}}元</li>
-			<li class="col08"><a href="javascript:cart_del({{goods.id}});">删除</a></li>
-		</ul>	
-	{% endfor %}
-	<ul class="settlements">
-		<li class="col01"><input type="checkbox" id="check_all" name="" checked=""></li>
-		<li class="col02">全选</li>
-		<li class="col03">合计(不含运费)：<span>¥</span><em class="total_price">0.00</em><br>共计<b class="total_count1">{{cart_goods_count}}</b>件商品</li>
-		<li class="col04"><a href="place_order.html">去结算</a></li>
-	</ul>
+    {% for goods in cart_goods %}
+        <ul class="cart_list_td clearfix" id='{{goods.id}}'>
+            <li class="col01"><input type="checkbox" name="" checked></li>
+            <li class="col02"><a href="/goods/{{goods.goods.id}}"><img src="/static/{{goods.goods.goods_pic}}"></a></li>
+            <li class="col03"><a href="/goods/{{goods.goods.id}}">{{goods.goods.goods_title}}</a><br><em>{{goods.goods.goods_price}}元/{{goods.goods.goods_price_unit}}</em></li>
+            <li class="col04">{{goods.goods.goods_price_unit}}</li>
+            <li class="col05">{{goods.goods.goods_price}}元</li>
+            <li class="col06">
+                <div class="num_add">
+                    <a href="javascript:;" class="add fl">+</a>
+                    <input type="text" class="num_show fl" value="{{goods.count}}"> 
+                    <a href="javascript:;" class="minus fl">-</a>   
+                </div>
+            </li>
+            <li class="col07">{{goods.goods.goods_price}}元</li>
+            <li class="col08"><a href="javascript:cart_del({{goods.id}});">删除</a></li>
+        </ul>   
+    {% endfor %}
+    <ul class="settlements">
+        <li class="col01"><input type="checkbox" id="check_all" name="" checked=""></li>
+        <li class="col02">全选</li>
+        <li class="col03">合计(不含运费)：<span>¥</span><em class="total_price">0.00</em><br>共计<b class="total_count1">{{cart_goods_count}}</b>件商品</li>
+        <li class="col04" id="settle_accounts"><a href="#">去结算</a></li>
+    </ul>
 
 {%endblock user_center_body%}

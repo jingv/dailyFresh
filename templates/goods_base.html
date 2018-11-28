@@ -1,6 +1,16 @@
 {% extends 'base_foot.html' %}
 
-{%block head%}{%block index_head%}{%endblock index_head%}{%endblock head%}
+{%block head%}
+	<script type="text/javascript" src='/static/js/jquery-1.12.4.min.js'></script>
+	<script>
+		$(function(){
+			$.get('/cart/cart_goods_type_count/', function(data){
+				$('#show_count').text(data.goods_count);
+			});
+		});
+	</script>
+	{%block index_head%}{%endblock index_head%}
+{%endblock head%}
 
 {%block body%}
 <body>
@@ -29,7 +39,7 @@
 					<span>|</span>
 					<a href="/cart/">我的购物车</a>
 					<span>|</span>
-					<a href="user_center_order.html">我的订单</a>
+					<a href="/order/">我的订单</a>
 				</div>
 			</div>
 		</div>		
@@ -42,8 +52,8 @@
 			<input type="button" class="input_btn fr" name="" value="搜索">
 		</div>
 		<div class="guest_cart fr">
-			<a href="#" class="cart_name fl">我的购物车</a>
-			<div class="goods_count fl" id="show_count">1</div>
+			<a href="/cart/" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl" id="show_count"></div>
 		</div>
 	</div>
 

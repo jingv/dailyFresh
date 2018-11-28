@@ -9,11 +9,23 @@ def cart(request):
     user_id = request.session['user_id']
     cart_goods = models.CartInfo.objects.filter(user_id=user_id)
     context = {
-        'title': '天天生鲜-购物车',
+        'title': '购物车',
         'page_num': 1,
         'cart_goods': cart_goods,
+        'goods_count': cart_goods.count(),
     }
     return render(request, 'df_cart/cart.html', context)
+
+
+@user_decorator.login
+# 返回购物车商品种类的数量
+def cart_goods_type_count(request):
+    user_id = request.session['user_id']
+    cart_goods = models.CartInfo.objects.filter(user_id=user_id)
+    data = {
+        'goods_count': cart_goods.count(),
+    }
+    return JsonResponse(data)
 
 
 @user_decorator.login
@@ -64,7 +76,7 @@ def edit(request, cart_id, count):
 @user_decorator.login
 def delete(request, cart_id):
     try:
-        cart = models.GoodsInfo.objects.get(pk=int(cart_id))
+        cart = models.CartInfo.objects.get(pk=int(cart_id))
         cart.delete()
         data = {
             'ok': 1,

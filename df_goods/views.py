@@ -22,7 +22,7 @@ def index(request):
     type51 = typelist[5].goodsinfo_set.order_by('-goods_click')[0:4]
 
     context = {
-        'title': '天天生鲜-首页',
+        'title': '首页',
         'type0': typelist[0].id,
         'type00': type00,
         'type01': type01,
@@ -64,7 +64,7 @@ def list(request, type_id, page_index, sort_rules):
     page_lsit = paginator.page(int(page_index))
 
     context = {
-        'title': '天天生鲜' + typeinfo.type_title,
+        'title': typeinfo.type_title,
         'page_list': page_lsit,
         'paginator': paginator,
         'typeinfo': typeinfo,
@@ -90,7 +90,7 @@ def detail(request, goods_id):
     news = goods.goods_type.goodsinfo_set.order_by('-id')[0:2]
     goods_describe = str(goods.goods_detail)[3: -4]
     context = {
-        'title': '天天生鲜' + goods.goods_type.type_title,
+        'title': goods.goods_type.type_title,
         'goods': goods,
         'goods_describe': goods_describe,
         'news': news,
