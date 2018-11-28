@@ -31,8 +31,11 @@
                 each_goods_price = parseFloat(count) * parseFloat(price);
                 // toFixed 表示取几位小数
                 $(this).text(each_goods_price.toFixed(2));
-                total_price += each_goods_price;
-                total_count ++;
+                // 计算总价时是否过滤掉未选中的元素
+                if($(this).prevAll('.col01').find('input').prop('checked')){
+					total_price += each_goods_price;
+					total_count ++;
+                };                
             });
             // 显示总计
             $('.total_price').text(total_price.toFixed(2));
@@ -117,8 +120,8 @@
 		<ul class="cart_list_td clearfix" id='{{goods.id}}'>
 			<li class="col01"><input type="checkbox" name="" checked></li>
 			<li class="col02"><img src="/static/{{goods.goods.goods_pic}}"></li>
-			<li class="col03">{{goods.goods.goods_title}}<br><em>{{goods.goods.goods_price}}元/{{goods.goods.goods_price_unit}}g</em></li>
-			<li class="col04">{{goods.goods.goods_price_unit}}g</li>
+			<li class="col03">{{goods.goods.goods_title}}<br><em>{{goods.goods.goods_price}}元/{{goods.goods.goods_price_unit}}</em></li>
+			<li class="col04">{{goods.goods.goods_price_unit}}</li>
 			<li class="col05">{{goods.goods.goods_price}}元</li>
 			<li class="col06">
 				<div class="num_add">
