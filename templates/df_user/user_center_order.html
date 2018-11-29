@@ -1,5 +1,37 @@
 {%extends 'user_center_base.html'%}
 
+{%block cart_head%}
+	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+	<script>
+		$(function () {
+			// alert($('.cl04').html());
+			$('.col04').each(function(){
+				count = $(this).prev().text();
+				price = $(this).prev().prev().children().find('span').text();
+				// alert(price);
+				item_total_price = parseInt(count) * parseFloat(price)
+				// alert(item_total_price);
+				$(this).text(item_total_price.toFixed(2) + '元');
+			});
+			$('.oper_btn').click(function() {
+				// alert($(this).parents('.order_list_table').prev().children().find('span').text());
+				this_btn = $(this);
+				$.get('/order/pay' + $(this).parents('.order_list_table').prev().children().find('span').text() + '/', function(data){
+					if(data.order_state == 'ok'){
+						// alert(this_btn.parent().prev().html('已付款'));
+						this_btn.parent().prev().html('已付款')
+						this_btn.css({
+							'opacity': '0.5',
+						});
+					}else{
+						alert('sorry，未知错误，请重试！');
+					}
+				});
+			});
+		});
+	</script>
+{%endblock cart_head%}
+
 {%block user_center_body%}
 	<div class="main_con clearfix">
 		<div class="left_menu_con clearfix">
@@ -16,7 +48,7 @@
 				{% for user_order in page_list %}
 					<ul class="order_list_th w978 clearfix">
 						<li class="col01">{{user_order.order_date}}</li>
-						<li class="col02">订单号：{{user_order.order_id}}</li>
+						<li class="col02">订单号：<span id='order_id'>{{user_order.order_id}}</span></li>
 						<li class="col02 stress">
 							{% if user_order.isPay %}已支付
 							{% else %}未支付
@@ -28,19 +60,24 @@
 						<tbody>
 							<tr>
 								<td width="55%">
-									{% for goods in user_orders_item.0 %}
-									<ul class="order_goods_list clearfix">					
-										<li class="col01"><img src="/static/{{goods.goods.goods_pic}}"></li>
-										<li class="col02">{{goods.goods.goods_title}}<em>{{goods.goods.goods_price}}元/{{goods.goods.goods_price_unit}}g</em></li>	
-										<li class="col03">{{goods.count}}</li>
-										<li class="col04">{{goods.price}}元</li>	
-									</ul>
+									{% for goods in user_order.orderdetailinfo_set.all %}
+										<ul class="order_goods_list clearfix">					
+											<li class="col01"><img src="/static/{{goods.goods.goods_pic}}"></li>
+											<li class="col02">{{goods.goods.goods_title}}<em><span>{{goods.goods.goods_price}}</span>元/{{goods.goods.goods_price_unit}}</em></li>	
+											<li class="col03">{{goods.count}}</li>
+											<li class="col04">{{goods.price}}元</li>	
+										</ul>
 									{% endfor %}
-
 								</td>
 								<td width="15%">{{user_order.order_total_price}}元</td>
-								<td width="15%">待付款</td>
-								<td width="15%"><a href="#" class="oper_btn">去付款</a></td>
+								<td width="15%">
+									{% if user_order.isPay %}已付款
+									{% else %}待付款
+									{% endif %}
+								</td>
+								<td width="15%"><a class="oper_btn" 
+									{% if user_order.isPay %}style="opacity: 0.5"
+									{% endif %}>去付款</a></td>
 							</tr>
 						</tbody>
 					</table>				

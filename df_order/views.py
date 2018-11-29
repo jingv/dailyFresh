@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.db import transaction
 from df_user.models import UserInfo
 from df_cart.models import CartInfo
@@ -49,7 +50,7 @@ def order_handler(request):
         user_id = request.session['user_id']
         now = datetime.now()
         now_str = now.strftime('%x').replace('/', '') + now.strftime('%X')
-        order.order_id = '%s%d' % (now_str, user_id)
+        order.order_id = '%s%d' % (now_str.replace(':', ''), user_id)
         order.user = UserInfo.objects.get(id=user_id)
         order.order_date = now_str
         order.order_total_price = eval(request.GET.get('total_price'))
@@ -87,10 +88,20 @@ def order_handler(request):
 
 @user_decorator.login
 def pay(request, order_id):
-    order = models.OrderInfo.objects.get(order_id=order_id)
+    # 创建事务回退的点
+    print(order_id, '*********************')
+    # tran_id = transaction.savepoint()
+    # try:
+    order = models.OrderInfo.objects.get(order_id=int(order_id))
     order.isPay = True
     order.save()
     context = {
-        'order': order,
+        'order_state': 'ok',
     }
-    return render(request, 'df_order/pay.html', context)
+    # except Exception as e:
+    #     # 回滚
+    #     transaction.savepoint_rollback(tran_id)
+    #     context = {
+    #         'order_state': 'error',
+    #     }
+    return JsonResponse(context)

@@ -139,10 +139,10 @@ def user_info(request):
 def user_order(request, page_index):
     user_id = request.session['user_id']
     # 查询用户总单
-    user_orders = order_model.OrderInfo.objects.filter(user_id=user_id).order_by('-isPay')
-    print('=====user_orders========', user_orders)
+    user_orders = order_model.OrderInfo.objects.filter(user_id=user_id).order_by('-order_date')
+    # print('=====user_orders========', user_orders)
     # 对获得的数据进行分页操作， 获取相应页面的数据
-    paginator = Paginator(user_orders, 2)
+    paginator = Paginator(user_orders, 4)
     page_list = paginator.page(int(page_index))
 
     context = {
@@ -151,12 +151,7 @@ def user_order(request, page_index):
         # 'user_orders': user_orders,
         'page_list': page_list,
         'paginator': paginator,
-        'user_orders_item': [],
     }
-
-    for i in page_list:
-        context['user_orders_item'].append(order_model.OrderDetailInfo.objects.filter(order_id=i.order_id))
-    # print('**************************', context['user_orders_item'])
 
     return render(request, 'df_user/user_center_order.html', context)
 
