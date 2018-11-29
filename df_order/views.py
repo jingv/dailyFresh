@@ -61,6 +61,7 @@ def order_handler(request):
             detail.order = order
             # 查询购物车信息
             cart = CartInfo.objects.get(id=cart_id)
+            # print('==========================', cart_id)
             # 判断商品库存
             goods = cart.goods
             if goods.goods_left >= cart.count:
@@ -72,16 +73,16 @@ def order_handler(request):
                 detail.count = cart.count
                 detail.save()
                 # 删除购物车数据
+                # print('==================', 'delete')
                 cart.delete()
             else:
                 transaction.savepoint_rollback(tran_id)
                 return redirect('/cart/')
-        transaction.savepoint_rollback(tran_id)
     except Exception as e:
         transaction.savepoint_rollback(tran_id)
         return redirect('/cart/')
 
-    return redirect('/user/user_order/')
+    return redirect('/user/user_order_1/')
 
 
 @user_decorator.login

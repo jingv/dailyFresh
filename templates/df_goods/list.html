@@ -90,7 +90,7 @@
 					{% endif %}
 				{% endfor %}
 
-				{% if page_list.has_previous %}
+				{% if page_list.has_next %}
 					<a href="/goods/list{{typeinfo.id}}_{{page_list.next_page_number}}_{{sort_rules}}/">下一页</a>
 				{% endif %}
 			</div>
