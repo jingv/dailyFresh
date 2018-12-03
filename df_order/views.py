@@ -89,7 +89,7 @@ def order_handler(request):
 @user_decorator.login
 def pay(request, order_id):
     # 创建事务回退的点
-    print(order_id, '*********************')
+    # print(order_id, '*********************')
     # tran_id = transaction.savepoint()
     # try:
     order = models.OrderInfo.objects.get(order_id=int(order_id))

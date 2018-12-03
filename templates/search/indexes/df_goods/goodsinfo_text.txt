@@ -1,0 +1,3 @@
+{{objct.goods_title}}
+{{objct.goods_describe}}
+{{objct.goods_detail}}
