@@ -1,6 +1,7 @@
 from django.db import models
-from df_user.models import UserInfo
+
 from df_goods.models import GoodsInfo
+from df_user.models import UserInfo
 
 
 class OrderInfo(models.Model):
