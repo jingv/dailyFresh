@@ -1,10 +1,13 @@
 from datetime import datetime
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
+
 from django.db import transaction
-from df_user.models import UserInfo
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+
 from df_cart.models import CartInfo
 from df_user import user_decorator
+from df_user.models import UserInfo
+
 from . import models
 
 
