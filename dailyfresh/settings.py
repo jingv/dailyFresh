@@ -151,7 +151,7 @@ HAYSTACK_CONNECTIONS = {
     }
 }
 
-#新增的数据自动生成索引
+# 新增的数据自动生成索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 # 分页输出值
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
